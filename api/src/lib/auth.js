@@ -20,15 +20,16 @@ import { db } from './db'
  * seen if someone were to open the Web Inspector in their browser.
  */
 export const getCurrentUser = async (session) => {
-  if (!session || typeof session.id !== 'number') {
-    throw new Error('Invalid session')
-  }
-
+  return await db.user.findUnique({
+    where: { id: session.id },
+    select: { id: true, email: true, roles: true },
+  })
+}
   return await db.user.findUnique({
     where: { id: session.id },
     select: { id: true, email: true },
   })
-}
+
 
 /**
  * The user is authenticated if there is a currentUser in the context
